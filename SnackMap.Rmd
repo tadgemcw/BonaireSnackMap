@@ -1,0 +1,67 @@
+
+
+<h1 style="text-align: center;"> Bonaire Snack Map </h1>
+
+
+```{r global setup settings, include=FALSE}
+# Global code chunk settings
+library(knitr)
+opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r load libraries and data, message=FALSE, warning=FALSE, }
+library(readxl)
+library(dplyr)
+library(leaflet)
+
+snacks <- read_excel("SnackMapBonaire.xlsx")
+```
+
+<style>
+.leaflet {margin: auto}
+</style>
+
+```{r map, fig.pos="center"}
+
+# Assigning colors
+my_palette <- colorFactor(palette = c("red", "blue"),
+                          levels = c("Krioyo", "Chinese"))
+
+
+# Creating cusine groups
+snacks_krioyo <- snacks %>%
+  filter(Type == "Krioyo")
+
+snacks_chinese <- snacks %>%
+  filter(Type == "Chinese")
+
+
+# Building map
+map <- snacks %>% 
+  leaflet() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addCircleMarkers(data = snacks,
+                   radius = 3,
+                   color = ~my_palette(Type),
+                   popup = ~paste0("<b>", Name, "</b>","<br/>", Type),
+                   group = "All") %>%
+  addCircleMarkers(data = snacks_krioyo,
+                   radius = 3,
+                   color = ~my_palette(Type),
+                   popup = ~paste0("<b>", Name, "</b>","<br/>", Type),
+                   group = "Krioyo") %>%
+  addCircleMarkers(data = snacks_chinese,
+                   radius = 3,
+                   color = ~my_palette(Type),
+                   popup = ~paste0("<b>", Name, "</b>","<br/>", Type),
+                   group = "Chinese") %>%
+  addLayersControl(c("All", "Krioyo", "Chinese"))
+
+
+map
+
+
+#CartoDB.Positron is a street map.
+#Esri.WorldImagery is a satellite layer.
+```
+
