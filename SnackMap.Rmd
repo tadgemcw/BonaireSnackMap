@@ -1,7 +1,7 @@
 
-
+<br>
 <h1 style="text-align: center;"> Bonaire Snack Map </h1>
-
+<br>
 
 ```{r global setup settings, include=FALSE}
 # Global code chunk settings
@@ -27,9 +27,13 @@ snacks <- read_excel("SnackMapBonaire.xlsx")
 ```{r map, fig.pos="center"}
 
 # Assigning colors
-my_palette <- colorFactor(palette = c("red", "blue"),
+# Amstel red is #cf080f
+# Polar blue is #0b3ca4
+# Heineken green is #048743 
+# Amstel Bright yellow is #f8bf04
+ 
+my_palette <- colorFactor(palette = c("#cf080f", "#0b3ca4"),
                           levels = c("Krioyo", "Chinese"))
-
 
 # Creating cusine groups
 snacks_krioyo <- snacks %>%
@@ -55,8 +59,6 @@ leaflet() %>%
                    group = "Chinese") %>%
   addLayersControl(baseGroups = c("Street", "Satelite"),
                    overlayGroups = c("Krioyo", "Chinese")) %>%
-#  addSearchFeatures(targetGroups = c("Krioyo", "Chinese"), 
-#                   options = searchFeaturesOptions(zoom = 18)) %>%
   addResetMapButton()
 
 
